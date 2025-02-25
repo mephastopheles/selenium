@@ -14,7 +14,7 @@ import pytesseract
 from typing import Any
 
 
-class PdfParser:
+class PDFParser:
     def __init__(self, filepath: str = ''):
         self.filepath = filepath
 
@@ -234,5 +234,5 @@ class PdfParser:
             self.text_per_page.append([page_text, line_format, text_from_images, text_from_tables, page_content])
 
 
-pdf = PdfParser(filepath='xui.pdf')
+pdf = PDFParser(filepath='xui.pdf')
 pdf.output_result()

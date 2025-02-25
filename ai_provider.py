@@ -78,7 +78,9 @@ class AI:
             lang (str): Language code
         """
         try:
-            content = (f'Please extract data like personal data, e-mail, phone, age etc from the following task.'
+            content = (f'Please extract personal data like '
+                       f'name, surname, e-mail, phone, age, password, login, dates, etc'
+                       f'from the following task.'
                        f'Task: {task}')
             response = self.client.chat.completions.create(
                 messages=[{
@@ -119,5 +121,8 @@ class AI:
 ai = AI()
 
 if __name__ == '__main__':
-    data = ai.extract_pd(task='Необходимо заполнить поля следующим e mail: sobaka@bk.ru ')
+    data = ai.extract_pd(task=' следующим e mail sobaka@bk.ru там вот моё имя никита')
     print(data)
+    from extract_pd import PDExtractor
+    pd = PDExtractor(message=data)
+    pd.email_extractor()
