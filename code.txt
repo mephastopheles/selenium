@@ -1,0 +1,73 @@
+/Users/nikita/PycharmProjects/selenium/venv/bin/python /Users/nikita/PycharmProjects/selenium/pipeline.py
+New g4f version: 0.4.7.7 (current: 0.4.6.1) | pip install -U g4f
+To automate the process described in the provided data using Selenium in Python, you can follow the steps outlined in the text, such as opening a browser, performing searches, and interacting with search results. Below is an example of a complete Python script using Selenium to carry out the described operations.
+
+### Prerequisites
+1. Install Python (if not already installed).
+2. Install Selenium library using pip:
+   ```
+   pip install selenium
+   ```
+3. Download the appropriate WebDriver for your browser (e.g., ChromeDriver for Chrome) and ensure it's in your system PATH.
+
+### Python Script
+```python
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+
+def main(query):
+    # Step 1: Открыть приложение или веб-браузер
+    # You can replace 'chrome' with other browsers like 'firefox' if needed.
+    driver = webdriver.Chrome()
+
+    try:
+        # Step 2: Перейти на страницу поиска Google
+        driver.get("https://www.google.com")
+
+        # Step 3: Найти строку поиска
+        search_box = driver.find_element(By.NAME, "q")
+
+        # Step 4: Напечатать текст в строку поиска
+        search_box.send_keys(query)
+
+        # Step 5: Запустить поиск
+        search_box.send_keys(Keys.RETURN)
+
+        # Step 6: Просмотреть результаты поиска
+        time.sleep(2)  # Wait for results to load
+
+        # Assuming the first result's title and link are of interest
+        results = driver.find_elements(By.XPATH, '//h3')
+        for index, result in enumerate(results):
+            print(f"{index + 1}: {result.text}")
+
+    finally:
+        # Close the browser after completing the tasks
+        time.sleep(5)  # Wait for a few seconds to review results
+        driver.quit()
+
+if __name__ == "__main__":
+    # Input for the search query
+    search_query = "найти кота"  # The task's search text
+    main(search_query)
+```
+
+### Explanation of the Code
+1. **Importing Libraries**: The script imports necessary classes from Selenium.
+2. **WebDriver Setup**: Initializes the WebDriver for Chrome. You can change this for other browsers as needed.
+3. **Visiting Google**: The script opens Google in a browser window.
+4. **Finding the Search Box**: Searches for the input box using its name attribute (`"q"`).
+5. **Inputting Search Query**: Sends the search query (in this case, "найти кота") to the search box.
+6. **Submitting Search**: Simulates pressing the Enter key to execute the search.
+7. **Waiting for Results**: Waits for a few seconds to ensure results are loaded.
+8. **Extracting and Displaying Results**: Finds elements with the search results and prints their titles to the console.
+9. **Closing the Browser**: Ensures the browser is closed after the operations are complete.
+
+### Important Notes:
+- Ensure you have the correct WebDriver version that matches your browser version.
+- Adjust the sleep times (`time.sleep()`) as needed to ensure elements are fully loaded before interaction.
+- This script specifically works with Google; if you need to use another search engine, the URL and element selectors may need to be changed accordingly.
+
+Process finished with exit code 0

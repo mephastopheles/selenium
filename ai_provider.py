@@ -11,6 +11,7 @@ logging.basicConfig(
 
 # Setup logger
 logger = logging.getLogger(__name__)
+
 logger.addHandler(RotatingFileHandler(filename=f"logs/{__name__}.log",
                                       mode='w',
                                       maxBytes=1024 * 1024))
@@ -96,25 +97,40 @@ class AI:
             print(f'Failed to decompose via LLM {e}')
 
     # возможно стоит добавить экстрактор url из сообщения
-    def generate(self, decomposed_task: str = '', url: str = '', lang: str = 'ru', ):
+    def generate(self, decomposed_task: str, url: str, page_source: str, pd:dict = None,lang: str = 'ru'):
         """
         Generates code with selenium for decomposed task on url through LLM
 
         Args:
-            decomposed_task (str): Decomposed task for completes
-            url (str): Url
             lang (str): Language code
+            pd (dict): Personal data dictionary
+            page_source (str):  code of sites page
+            url (str): task page
+            decomposed_task (str): Decomposed task for completes
+
+
+        Returns:
+            code on python
         """
 
         try:
-            content = (f'Please generate code for complete the following task on {url} with python framework selenium.'
-                       f'Task: {decomposed_task}')
+            if pd is None:
+                content = (f'Please generate code for complete the following task on {url} with python framework selenium.'
+                           f'The page at the {url} has the following structure {page_source}.'
+                           f'Task: {decomposed_task}')
+            else:
+                content = (
+                    f'Please generate code for complete the following task on {url} with python framework selenium.'
+                    f'The page at the {url} has the following structure {page_source}.'
+                    f'Task: {decomposed_task}.'
+                    f'Personal data for task: {pd}.')
             response = self.client.chat.completions.create(
                 messages=[{
                     "role": "user",
                     "content": content
                 }],
-                model=self.model
+                model=self.model,
+                stream=False
             )
             return response.choices[0].message.content
         except Exception as e:
@@ -124,10 +140,4 @@ class AI:
 
 
 if __name__ == '__main__':
-    # код сайта получаем по url из selenium.webdriver.page_source
-
-    ai = AI()
-    message = 'напиши в строку поиска на сайте google.com "хочу найти кота"'
-    decomposed = ai.decompose(task=message)
-    code = ai.generate(decomposed_task=decomposed, url='https://google.com')
-    print(code)
+    pass

@@ -10,7 +10,7 @@ class DOCXParser:
         self.document = Document(self.filepath)
         self.text = []
 
-    def text_extraction(self):
+    def output_result(self):
         for para in self.document.paragraphs:
             self.text.append(para.text)
 
@@ -24,5 +24,4 @@ class DOCXParser:
 
 
 if __name__ == '__main__':
-    dp = DOCXParser(filepath='xui.docx')
-    print(dp.text_extraction())
+    pass

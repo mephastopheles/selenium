@@ -238,5 +238,4 @@ class PDFParser:
 
 
 if __name__ == '__main__':
-    pdf = PDFParser(filepath='xui.pdf')
-    pdf.output_result()
+    pass

@@ -3,7 +3,7 @@ import re
 
 class PDExtractor:
     """personal data extractor"""
-
+    # надо бы добавить ещё каких нибудь разных данных
     def __init__(self, message: str):
         self.message = message
 
@@ -37,6 +37,4 @@ class PDExtractor:
 
 
 if __name__ == '__main__':
-    message = 'phone: +79501831442'
-    pd = PDExtractor(message=message)
-    print(pd.phone_extractor())
+    pass
