@@ -21,6 +21,8 @@ class AI:
         if model == 'free':
             self.client = Client()
             self.model = "gpt-4o-mini"
+
+        # платные модели
         elif model == 'gpt':
             ...
         elif model == 'deepseek':
@@ -93,6 +95,7 @@ class AI:
         except Exception as e:
             print(f'Failed to decompose via LLM {e}')
 
+    # возможно стоит добавить экстрактор url из сообщения
     def generate(self, decomposed_task: str = '', url: str = '', lang: str = 'ru', ):
         """
         Generates code with selenium for decomposed task on url through LLM
@@ -118,11 +121,13 @@ class AI:
             print(f'Failed to generate code via LLM {e}')
 
 
-ai = AI()
+
 
 if __name__ == '__main__':
-    data = ai.extract_pd(task=' следующим e mail sobaka@bk.ru там вот моё имя никита')
-    print(data)
-    from extract_pd import PDExtractor
-    pd = PDExtractor(message=data)
-    pd.email_extractor()
+    # код сайта получаем по url из selenium.webdriver.page_source
+
+    ai = AI()
+    message = 'напиши в строку поиска на сайте google.com "хочу найти кота"'
+    decomposed = ai.decompose(task=message)
+    code = ai.generate(decomposed_task=decomposed, url='https://google.com')
+    print(code)

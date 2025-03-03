@@ -15,6 +15,8 @@ from typing import Any
 
 
 class PDFParser:
+    """class for parsing pdf object"""
+
     def __init__(self, filepath: str = ''):
         self.filepath = filepath
 
@@ -26,6 +28,7 @@ class PDFParser:
         self.text_per_page = []
 
     def output_result(self):
+
         self.text_per_page = []
         self.extraction_loop()
         result = ''
@@ -234,5 +237,6 @@ class PDFParser:
             self.text_per_page.append([page_text, line_format, text_from_images, text_from_tables, page_content])
 
 
-pdf = PDFParser(filepath='xui.pdf')
-pdf.output_result()
+if __name__ == '__main__':
+    pdf = PDFParser(filepath='xui.pdf')
+    pdf.output_result()
