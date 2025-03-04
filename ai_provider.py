@@ -2,7 +2,7 @@ from g4f.client import Client
 
 import logging
 from logging.handlers import RotatingFileHandler
-
+from selenium import webdriver
 # logger config
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -112,16 +112,19 @@ class AI:
         Returns:
             code on python
         """
+        if len(page_source)>200:
+            page_source = page_source[:200]
 
         try:
             if pd is None:
+
                 content = (f'Please generate code for complete the following task on {url} with python framework selenium.'
-                           f'The page at the {url} has the following structure {page_source}.'
+                           # f'The page at the {url} has the following structure.'
                            f'Task: {decomposed_task}')
             else:
                 content = (
                     f'Please generate code for complete the following task on {url} with python framework selenium.'
-                    f'The page at the {url} has the following structure {page_source}.'
+                    # f'The page at the {url} has the following structure.'
                     f'Task: {decomposed_task}.'
                     f'Personal data for task: {pd}.')
             response = self.client.chat.completions.create(
@@ -140,4 +143,11 @@ class AI:
 
 
 if __name__ == '__main__':
+    ai = AI()
+    url = 'https://google.com'
+    driver = webdriver.Safari()
+    driver.get(url=url)
+    page_source = driver.page_source
+    driver.quit()
+    code = ai.generate(decomposed_task='бля буду буди',url='https://google.com',pd=None, page_source=page_source)
     pass
