@@ -112,19 +112,19 @@ class AI:
         Returns:
             code on python
         """
-        if len(page_source)>200:
-            page_source = page_source[:200]
+        if len(page_source)>150:
+            page_source = page_source[:150]
 
         try:
             if pd is None:
 
                 content = (f'Please generate code for complete the following task on {url} with python framework selenium.'
-                           # f'The page at the {url} has the following structure.'
+                           f'The page at the {url} has the following structure {page_source}.'
                            f'Task: {decomposed_task}')
             else:
                 content = (
                     f'Please generate code for complete the following task on {url} with python framework selenium.'
-                    # f'The page at the {url} has the following structure.'
+                    f'The page at the {url} has the following structure  {page_source}.'
                     f'Task: {decomposed_task}.'
                     f'Personal data for task: {pd}.')
             response = self.client.chat.completions.create(
