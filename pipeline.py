@@ -39,13 +39,13 @@ if __name__ == '__main__':
     driver.get(url=url)
     page_source = driver.page_source
     driver.quit()
-
+    code = ai.generate(decomposed_task=decomposed,
+                       url=url,
+                       page_source=page_source,
+                       pd=pd)
 
     while True:
-        code = ai.generate(decomposed_task=decomposed,
-                           url=url,
-                           page_source=page_source,
-                           pd=pd)
+
 
         result = re.search('```python', code)
         if result:
@@ -58,4 +58,5 @@ if __name__ == '__main__':
                 exec(code)
                 break
             except Exception as e:
-                print(e)
+                code = ai.rewrite(code=code, error=f'{e}')
+

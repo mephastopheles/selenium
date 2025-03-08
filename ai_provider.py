@@ -3,6 +3,7 @@ from g4f.client import Client
 import logging
 from logging.handlers import RotatingFileHandler
 from selenium import webdriver
+
 # logger config
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -97,7 +98,7 @@ class AI:
             print(f'Failed to decompose via LLM {e}')
 
     # возможно стоит добавить экстрактор url из сообщения
-    def generate(self, decomposed_task: str, url: str, page_source: str, pd:dict = None,lang: str = 'ru'):
+    def generate(self, decomposed_task: str, url: str, page_source: str, pd: dict = None, lang: str = 'ru'):
         """
         Generates code with selenium for decomposed task on url through LLM
 
@@ -112,15 +113,16 @@ class AI:
         Returns:
             code on python
         """
-        if len(page_source)>150:
+        if len(page_source) > 150:
             page_source = page_source[:150]
 
         try:
             if pd is None:
 
-                content = (f'Please generate code for complete the following task on {url} with python framework selenium.'
-                           f'The page at the {url} has the following structure {page_source}.'
-                           f'Task: {decomposed_task}')
+                content = (
+                    f'Please generate code for complete the following task on {url} with python framework selenium.'
+                    f'The page at the {url} has the following structure {page_source}.'
+                    f'Task: {decomposed_task}')
             else:
                 content = (
                     f'Please generate code for complete the following task on {url} with python framework selenium.'
@@ -139,7 +141,35 @@ class AI:
         except Exception as e:
             print(f'Failed to generate code via LLM {e}')
 
+    def rewrite(self, code: str, error: str, lang: str = 'ru'):
+        """
+        Rewrite code with error through LLM
 
+        Args:
+            lang (str): Language code
+            error (str): Error
+            code (str): Code
+
+
+        Returns:
+            code on python
+        """
+
+        try:
+
+            content = (f'This code {code} raises error {error}. Please rewrite code.')
+
+            response = self.client.chat.completions.create(
+                messages=[{
+                    "role": "user",
+                    "content": content
+                }],
+                model=self.model,
+                stream=False
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            print(f'Failed to generate code via LLM {e}')
 
 
 if __name__ == '__main__':
@@ -149,5 +179,5 @@ if __name__ == '__main__':
     driver.get(url=url)
     page_source = driver.page_source
     driver.quit()
-    code = ai.generate(decomposed_task='бля буду буди',url='https://google.com',pd=None, page_source=page_source)
+    code = ai.generate(decomposed_task='бля буду буди', url='https://google.com', pd=None, page_source=page_source)
     pass
