@@ -35,6 +35,20 @@ class PDExtractor:
             if match:
                 return match.group(0)[1:]
 
+    def password_extractor(self):
+        if re.search(pattern=r'phone',
+                     string=self.message,
+                     flags=re.IGNORECASE):
+            match = re.search(pattern=r'\s[\s:]*(\w+)',
+                              string=self.message,
+                              flags=re.IGNORECASE)
+            if match:
+                return match.group(0)[1:]
+
+
+
+
+
 
 if __name__ == '__main__':
     pass

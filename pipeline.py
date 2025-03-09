@@ -3,7 +3,25 @@ from docx_parser import DOCXParser
 from extract_pd import PDExtractor
 from ai_provider import AI
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import re
+
+
+def conneto_login(driver, account: str, password: str):
+    driver.get(url='https://app.conneto.com/auth/login')
+    username_field = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable(
+            driver.find_element(by=By.XPATH, value='//*[@id="__layout"]/div/div/div/div[1]/form/div[1]/div/input')))
+    username_field.send_keys(account)
+    password_field = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable(
+            driver.find_element(by=By.XPATH, value='//*[@id="__layout"]/div/div/div/div[1]/form/div[2]/input')))
+    password_field.send_keys(password)
+    submit_button = driver.find_element(by=By.CLASS_NAME, value="btn__first")
+    submit_button.click()
+
 
 if __name__ == '__main__':
 
@@ -28,14 +46,20 @@ if __name__ == '__main__':
     pde = PDExtractor(message=extracted_pd)
     pd = {'phone': pde.phone_extractor(),
           'name': pde.name_extractor(),
-          'email': pde.email_extractor()}
+          'email': pde.email_extractor(),
+          'password': pde.password_extractor()}
 
     decomposed = ai.decompose(task=task)
+
+
 
     url = 'https://app.conneto.com'
 
     # получаем код страницы
     driver = webdriver.Safari()
+
+    conneto_login(driver=driver, account=pd['email'], password=pd['password'])
+
     driver.get(url=url)
     page_source = driver.page_source
     driver.quit()
@@ -45,7 +69,6 @@ if __name__ == '__main__':
                        pd=pd)
 
     while True:
-
 
         result = re.search('```python', code)
         if result:
@@ -59,4 +82,3 @@ if __name__ == '__main__':
                 break
             except Exception as e:
                 code = ai.rewrite(code=code, error=f'{e}')
-
